@@ -62,8 +62,6 @@ Copie le fichier `.env` et adapte-le si besoin, puis crée un `.env.local` :
 DATABASE_URL="postgresql://user:password@127.0.0.1:5432/arbre?serverVersion=15"
 ```
 
----
-
 ### 4️⃣ Créer la base de données
 
 ```bash

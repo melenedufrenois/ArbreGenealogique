@@ -1,0 +1,33 @@
+### Symfony ###
+/.env.local
+/.env.local.php
+/.env.*.local
+/config/secrets/prod/prod.decrypt.private.php
+
+/public/bundles/
+/var/
+/vendor/
+
+### Doctrine / DB ###
+/migrations/*.log
+
+### PHPUnit ###
+/phpunit.xml
+.phpunit.result.cache
+
+### IDE / OS ###
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+
+### Logs ###
+*.log
+
+### Node (si jamais plus tard) ###
+/node_modules/
+/npm-debug.log*
+/yarn-error.log*
+
+### Cache ###
+.cache/
