@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+		<meta charset="UTF-8">
+		<title>Arbre Généalogique - {% block title %}{% endblock %}</title>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta name="description" content="Application généalogique pour gérer votre arbre familial">
+		
+		{% block stylesheets %}
+            <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
+			<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+			<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,400,500,600,700&display=swap"/>
+			<link href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.css" rel="stylesheet" />
+			<style>
+				:root {
+					--primary-color: #4F46E5;
+					--secondary-color: #10B981;
+					--danger-color: #EF4444;
+					--dark-bg: #F9FAFB;
+					--card-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+					--card-hover-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+				}
+
+				* {
+					font-family: 'Inter', sans-serif;
+				}
+
+				body {
+					background: linear-gradient(135deg, #F9FAFB 0%, #F3F4F6 100%);
+					min-height: 100vh;
+					color: #1F2937;
+				}
+
+				/* Navigation */
+				.navbar {
+					background: white;
+					box-shadow: var(--card-shadow);
+					padding: 1rem 2rem;
+					border-bottom: 3px solid var(--primary-color);
+				}
+
+				.navbar-brand {
+					font-weight: 700;
+					font-size: 1.5rem;
+					color: var(--primary-color) !important;
+					display: flex;
+					align-items: center;
+					gap: 0.75rem;
+				}
+
+				.navbar-brand i {
+					font-size: 1.75rem;
+				}
+
+				.nav-link {
+					color: #6B7280 !important;
+					font-weight: 500;
+					transition: all 0.3s ease;
+					position: relative;
+				}
+
+				.nav-link:hover {
+					color: var(--primary-color) !important;
+				}
+
+				.nav-link.active {
+					color: var(--primary-color) !important;
+				}
+
+				.nav-link.active::after {
+					content: '';
+					position: absolute;
+					bottom: -1.25rem;
+					left: 0;
+					right: 0;
+					height: 3px;
+					background: var(--primary-color);
+					border-radius: 2px;
+				}
+
+				@media (max-width: 1199.98px) {
+					.nav-link.active::after {
+						display: none;
+					}
+				}
+
+				/* Cards */
+				.card {
+					border: none;
+					box-shadow: var(--card-shadow);
+					border-radius: 12px;
+					transition: all 0.3s ease;
+				}
+
+				.card:hover {
+					box-shadow: var(--card-hover-shadow);
+					transform: translateY(-2px);
+				}
+
+				.card-header {
+					background: linear-gradient(135deg, var(--primary-color) 0%, #6366F1 100%);
+					color: white;
+					border: none;
+					border-radius: 12px 12px 0 0;
+					padding: 1.5rem;
+					font-weight: 600;
+				}
+
+				.card-body {
+					padding: 2rem;
+				}
+
+				/* Buttons */
+				.btn {
+					border-radius: 8px;
+					font-weight: 600;
+					padding: 0.75rem 1.5rem;
+					transition: all 0.3s ease;
+					border: none;
+				}
+
+				.btn-primary {
+					background: var(--primary-color);
+					color: white;
+				}
+
+				.btn-primary:hover {
+					background: #4338CA;
+					color: white;
+					transform: translateY(-2px);
+					box-shadow: 0 10px 15px -3px rgba(79, 70, 229, 0.3);
+				}
+
+				.btn-secondary {
+					background: #E5E7EB;
+					color: #1F2937;
+				}
+
+				.btn-secondary:hover {
+					background: #D1D5DB;
+					transform: translateY(-2px);
+				}
+
+				.btn-success {
+					background: var(--secondary-color);
+					color: white;
+				}
+
+				.btn-success:hover {
+					background: #059669;
+					transform: translateY(-2px);
+					box-shadow: 0 10px 15px -3px rgba(16, 185, 129, 0.3);
+				}
+
+				.btn-danger {
+					background: var(--danger-color);
+					color: white;
+				}
+
+				.btn-danger:hover {
+					background: #DC2626;
+					transform: translateY(-2px);
+				}
+
+				.btn-link {
+					color: var(--primary-color);
+					text-decoration: none;
+					font-weight: 600;
+				}
+
+				.btn-link:hover {
+					color: #4338CA;
+					text-decoration: underline;
+				}
+
+				/* Forms */
+				.form-label {
+					font-weight: 600;
+					color: #374151;
+					margin-bottom: 0.75rem;
+				}
+
+				.form-control, .form-select {
+					border: 2px solid #E5E7EB;
+					border-radius: 8px;
+					padding: 0.75rem 1rem;
+					transition: all 0.3s ease;
+					font-size: 1rem;
+				}
+
+				.form-control:focus, .form-select:focus {
+					border-color: var(--primary-color);
+					box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+				}
+
+				.form-group {
+					margin-bottom: 1.5rem;
+				}
+
+				/* Tables */
+				.table {
+					border-collapse: collapse;
+				}
+
+				.table thead th {
+					background: #F3F4F6;
+					border: none;
+					color: #1F2937;
+					font-weight: 600;
+					padding: 1rem;
+					text-align: left;
+				}
+
+				.table tbody td {
+					border: none;
+					padding: 1rem;
+					border-bottom: 1px solid #E5E7EB;
+				}
+
+				.table tbody tr:hover {
+					background: #F9FAFB;
+				}
+
+				/* Headings */
+				h1 {
+					color: #1F2937;
+					font-weight: 700;
+					margin-bottom: 2rem;
+					font-size: 2rem;
+				}
+
+				h2 {
+					color: #1F2937;
+					font-weight: 700;
+					margin-bottom: 1.5rem;
+				}
+
+				/* Alert */
+				.alert {
+					border: none;
+					border-radius: 8px;
+					border-left: 4px solid;
+				}
+
+				.alert-danger {
+					border-left-color: var(--danger-color);
+					background: #FEF2F2;
+					color: #991B1B;
+				}
+
+				.alert-success {
+					border-left-color: var(--secondary-color);
+					background: #F0FDF4;
+					color: #166534;
+				}
+
+				.alert-info {
+					border-left-color: var(--primary-color);
+					background: #EEF2FF;
+					color: #312E81;
+				}
+
+				/* Badges */
+				.badge {
+					border-radius: 6px;
+					padding: 0.5rem 0.75rem;
+					font-weight: 600;
+					font-size: 0.875rem;
+				}
+
+				.badge-primary {
+					background: #EEF2FF;
+					color: var(--primary-color);
+				}
+
+				.badge-success {
+					background: #F0FDF4;
+					color: var(--secondary-color);
+				}
+
+				.badge-danger {
+					background: #FEF2F2;
+					color: var(--danger-color);
+				}
+
+				/* Footer */
+				footer {
+					background: white;
+					border-top: 1px solid #E5E7EB;
+					padding: 2rem;
+					text-align: center;
+					color: #6B7280;
+					margin-top: 3rem;
+				}
+
+				/* Footer toujours en bas */
+				.layout-footer {
+					background: white;
+					border-top: 1px solid #E5E7EB;
+					padding: 1.5rem;
+					text-align: center;
+					color: #6B7280;
+				}
+
+				/* Layout global */
+				.layout-root {
+					min-height: 100vh;
+					display: flex;
+					flex-direction: column;
+				}
+
+				/* Contenu principal qui prend l’espace */
+				.layout-content {
+					flex: 1;
+					display: flex;
+					flex-direction: column;
+				}
+
+				/* Conteneur principal */
+				.container-main {
+					max-width: 1800px;
+					padding: 2rem;
+				}
+
+				/* Responsive */
+				@media (max-width: 768px) {
+					.card-body {
+						padding: 1.5rem 1rem;
+					}
+
+					h1 {
+						font-size: 1.5rem;
+					}
+
+					.btn {
+						padding: 0.625rem 1rem;
+						font-size: 0.875rem;
+					}
+				}
+			</style>
+		{% endblock %}
+
+		{% block javascripts %}
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q" crossorigin="anonymous"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.js"></script>
+		{% endblock %}
+	</head>
+    <body class="layout-root">
+        <nav class="navbar navbar-expand-lg navbar-light">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="{{ path('family_tree') }}">
+                    <i class="fas fa-tree"></i>
+                    Mon Arbre Généalogique
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item">
+                            <a class="nav-link {% if app.request.attributes.get('_route') == 'family_tree' %}active{% endif %}" href="{{ path('family_tree') }}">
+                                <i class="fas fa-project-diagram"></i> Arbre
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if app.request.attributes.get('_route') == 'family_list' %}active{% endif %}" href="{{ path('family_list') }}">
+                                <i class="fas fa-list"></i> Liste
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if app.request.attributes.get('_route') == 'personne_new' %}active{% endif %}" href="{{ path('personne_new') }}">
+                                <i class="fas fa-user-plus"></i> Ajouter
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if app.request.attributes.get('_route') == 'generations_list' %}active{% endif %}" href="{{ path('generations_list') }}">
+                                <i class="fas fa-layer-group"></i> Générations
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <main class="layout-content">
+			<div class="container-fluid container-main">
+				{% block body %}{% endblock %}
+			</div>
+		</main>
+
+        <footer class="layout-footer">
+			<p>&copy; 2025 Mon Arbre Généalogique | Tous droits réservés</p>
+		</footer>
+    </body>
+</html>

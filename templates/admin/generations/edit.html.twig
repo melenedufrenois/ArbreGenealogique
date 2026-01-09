@@ -1,0 +1,47 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier une génération{% endblock %}
+
+{% block body %}
+<div class="row justify-content-center">
+    <div class="col-12 col-md-10 col-lg-8">
+        <div class="card">
+            <div class="card-header">
+                <div>
+                    <h1 class="mb-0" style="color: white; font-size: 1.5rem;">
+                        <i class="fas fa-edit"></i> Modifier une génération
+                    </h1>
+                    <p class="text-white-50 mb-0 mt-2">{{ generation.generationName }}</p>
+                </div>
+            </div>
+            <div class="card-body">
+                {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'class': 'needs-validation'}}) }}
+
+                    <div class="form-group">
+                        {{ form_label(form.generationName, "Nom de la génération") }}
+                        {{ form_widget(form.generationName, {'attr': {'class': 'form-control', 'placeholder': 'Ex: Ancêtres, Parents, Enfants...'}}) }}
+                        {{ form_errors(form.generationName) }}
+                    </div>
+
+                    <div class="form-group">
+                        {{ form_label(form.displayOrder, "Ordre d'affichage") }}
+                        {{ form_widget(form.displayOrder, {'attr': {'class': 'form-control'}}) }}
+                        {{ form_errors(form.displayOrder) }}
+                        <small class="text-muted">0 = tout en haut, augmentez pour descendre dans l'arbre.</small>
+                    </div>
+
+                    <div class="mt-5 d-flex gap-2 justify-content-between">
+                        <div>
+                            <a href="{{ path('generations_list') }}" class="btn btn-secondary">
+                                <i class="fas fa-arrow-left"></i> Annuler
+                            </a>
+                        </div>
+                        {{ form_widget(form.save, {'attr': {'class': 'btn btn-success btn-lg'}}) }}
+                    </div>
+
+                {{ form_end(form) }}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

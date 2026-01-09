@@ -1,0 +1,73 @@
+/* #fond {
+    background-color: #0338A3;
+} */
+
+body {
+  background-color: #F5F8FA;
+}
+
+
+.bg-gray {
+    background-color: #89898996 !important;
+  }
+
+/* body {
+    background-color: #F5F8FA;
+} */
+
+.cnam_css_animate{
+    height: 100vh;
+}
+
+.cnam_css_animate::before{
+    content: "";
+    position: fixed;
+    width: 400%;
+    height: 100%;
+    background-color: #BE181D;;
+    border-radius: 50%;
+    left: 50%;
+    top: 0%;
+    transform: translate(-50%) skew(0deg,-10deg);
+    z-index: -1;
+    animation: waving 5s ease-in-out infinite alternate;
+}
+
+@keyframes waving{
+    from{
+    transform: translateX(-50%) skew(0,-10deg)
+    }
+    to{
+    transform: translateX(-30%) skew(10deg,0)
+
+
+    }
+}
+
+.text-dark-blue {
+    color: #094d92 !important; /* Bleu foncé */
+}
+
+.text-dark-blue:hover {
+    transition: color 0.2s ease, background-color 0.2s ease;
+    color: #073562 !important;
+  }
+
+.text-dark-red {
+    color: #c70707 !important; /* Bleu foncé */
+}
+
+.badge-light-pink {
+    color: #cd5086;
+    background-color: #ffe8f0;
+}
+
+.badge-light-orange {
+    color: #cd6350;
+    background-color: #ffece8;
+}
+
+.svg-icon.svg-icon-8x svg {
+    height: 8rem !important;
+    width: 8rem !important;
+  }

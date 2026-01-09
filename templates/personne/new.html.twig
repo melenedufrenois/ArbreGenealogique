@@ -1,0 +1,122 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Ajouter une personne{% endblock %}
+
+{% block body %}
+<div class="row justify-content-center">
+    <div class="col-12 col-md-10 col-lg-8">
+        <div class="card">
+            <div class="card-header">
+                <div>
+                    <h1 class="mb-0" style="color: white; font-size: 1.5rem;">
+                        <i class="fas fa-user-plus"></i> Ajouter une nouvelle personne
+                    </h1>
+                    <p class="text-white-50 mb-0 mt-2">Complétez les informations pour enregistrer un nouveau membre</p>
+                </div>
+            </div>
+            <div class="card-body">
+                {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'class': 'needs-validation'}}) }}
+
+                    <div class="form-group">
+                        {{ form_label(form.prenom, "Prénom") }}
+                        {{ form_widget(form.prenom, {'attr': {'class': 'form-control', 'placeholder': 'Entrez le prénom'}}) }}
+                        {{ form_errors(form.prenom) }}
+                    </div>
+
+                    <div class="form-group">
+                        {{ form_label(form.nom, "Nom") }}
+                        {{ form_widget(form.nom, {'attr': {'class': 'form-control', 'placeholder': 'Entrez le nom'}}) }}
+                        {{ form_errors(form.nom) }}
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                {{ form_label(form.naissance, "Date de naissance") }}
+                                {{ form_widget(form.naissance, {'attr': {'class': 'form-control', 'type': 'date'}}) }}
+                                {{ form_errors(form.naissance) }}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                {{ form_label(form.genre, "Sexe") }}
+                                <div class="mt-2">
+                                    {{ form_widget(form.genre, {'attr': {'class': 'd-flex gap-3'}}) }}
+                                </div>
+                                {{ form_errors(form.genre) }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="form-check form-switch">
+                            {{ form_widget(form.mort, {'attr': {'class': 'form-check-input'}}) }}
+                            {{ form_label(form.mort, "Décédé(e)", {'label_attr': {'class': 'form-check-label'}}) }}
+                        </div>
+                        {{ form_errors(form.mort) }}
+                    </div>
+
+                    <hr class="my-4">
+
+                    <h5 class="mb-3"><i class="fas fa-layer-group"></i> Génération</h5>
+
+                    <div class="form-group">
+                        {{ form_label(form.generation, "Génération") }}
+                        {{ form_widget(form.generation, {'attr': {'class': 'form-select'}}) }}
+                        {{ form_errors(form.generation) }}
+                        <small class="text-muted">Sélectionnez une génération. <a href="{{ path('generations_list') }}">Gérer les générations</a></small>
+                    </div>
+
+                    <hr class="my-4">
+
+                    <div class="form-group">
+                        {{ form_label(form.pere, "Père") }}
+                        {{ form_widget(form.pere, {'attr': {'class': 'form-select'}}) }}
+                        {{ form_errors(form.pere) }}
+                    </div>
+
+                    <div class="form-group">
+                        {{ form_label(form.mere, "Mère") }}
+                        {{ form_widget(form.mere, {'attr': {'class': 'form-select'}}) }}
+                        {{ form_errors(form.mere) }}
+                    </div>
+
+                    <div class="form-group">
+                        {{ form_label(form.partenaires, "Conjoint(s)") }}
+                        {{ form_widget(form.partenaires, {'attr': {'class': 'form-select', 'multiple': 'multiple'}}) }}
+                        {{ form_errors(form.partenaires) }}
+                    </div>
+
+                    <div class="form-group">
+                        {{ form_label(form.enfants, "Enfant(s)") }}
+                        {{ form_widget(form.enfants, {'attr': {'class': 'form-select', 'multiple': 'multiple'}}) }}
+                        {{ form_errors(form.enfants) }}
+                        <small class="text-muted">Sélectionnez les enfants de cette personne.</small>
+                    </div>
+
+                    <div class="mt-5 d-flex gap-2 justify-content-between">
+                        <a href="{{ path('family_tree') }}" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left"></i> Annuler
+                        </a>
+                        {{ form_widget(form.save, {'attr': {'class': 'btn btn-success btn-lg'}}) }}
+                    </div>
+
+                {{ form_end(form) }}
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .form-check-input {
+        width: 3rem;
+        height: 1.5rem;
+        margin-top: 0.25rem;
+    }
+
+    .form-check-input:checked {
+        background-color: #4F46E5;
+        border-color: #4F46E5;
+    }
+</style>
+{% endblock %}
