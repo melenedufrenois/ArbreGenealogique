@@ -4,102 +4,86 @@
 
 {% block body %}
 <div class="row justify-content-center">
-    <div class="col-12 col-md-10 col-lg-8">
-        <div class="card">
-            <div class="card-header">
-                <div>
-                    <h1 class="mb-0" style="color: white; font-size: 1.5rem;">
-                        <i class="fas fa-edit"></i> Modifier une personne
-                    </h1>
-                    <p class="text-white-50 mb-0 mt-2">{{ personne.prenom }} {{ personne.nom }}</p>
-                </div>
+    <div class="col-md-8">
+        <div class="card shadow-sm border-0">
+            <div class="card-header bg-primary text-white py-3">
+                <h4 class="mb-0">
+                    <i class="fas fa-edit me-2"></i>Modifier {{ personne.prenom }} {{ personne.nom }}
+                </h4>
             </div>
-            <div class="card-body">
+            <div class="card-body p-4">
                 {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'class': 'needs-validation'}}) }}
 
-                    <div class="form-group">
-                        {{ form_label(form.prenom, "Prénom") }}
-                        {{ form_widget(form.prenom, {'attr': {'class': 'form-control', 'placeholder': 'Entrez le prénom'}}) }}
-                        {{ form_errors(form.prenom) }}
-                    </div>
-
-                    <div class="form-group">
-                        {{ form_label(form.nom, "Nom") }}
-                        {{ form_widget(form.nom, {'attr': {'class': 'form-control', 'placeholder': 'Entrez le nom'}}) }}
-                        {{ form_errors(form.nom) }}
-                    </div>
-
-                    <div class="row">
+                    <div class="row g-3">
                         <div class="col-md-6">
-                            <div class="form-group">
-                                {{ form_label(form.naissance, "Date de naissance") }}
-                                {{ form_widget(form.naissance, {'attr': {'class': 'form-control', 'type': 'date'}}) }}
-                                {{ form_errors(form.naissance) }}
-                            </div>
+                            <label class="form-label fw-bold" for="{{ form.prenom.vars.id }}">Prénom <span class="text-danger">*</span></label>
+                            {{ form_widget(form.prenom, {'attr': {'class': 'form-control', 'placeholder': 'Entrez le prénom', 'required': 'required'}}) }}
+                            {{ form_errors(form.prenom) }}
                         </div>
                         <div class="col-md-6">
-                            <div class="form-group">
-                                {{ form_label(form.genre, "Sexe") }}
-                                <div class="mt-2">
-                                    {{ form_widget(form.genre, {'attr': {'class': 'd-flex gap-3'}}) }}
-                                </div>
-                                {{ form_errors(form.genre) }}
+                            <label class="form-label fw-bold" for="{{ form.nom.vars.id }}">Nom <span class="text-danger">*</span></label>
+                            {{ form_widget(form.nom, {'attr': {'class': 'form-control', 'placeholder': 'Entrez le nom', 'required': 'required'}}) }}
+                            {{ form_errors(form.nom) }}
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold" for="{{ form.naissance.vars.id }}">Date de naissance <span class="text-danger">*</span></label>
+                            {{ form_widget(form.naissance, {'attr': {'class': 'form-control', 'type': 'date', 'required': 'required'}}) }}
+                            {{ form_errors(form.naissance) }}
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold" for="{{ form.genre.vars.id }}">Sexe <span class="text-danger">*</span></label>
+                            <div class="d-flex gap-3 mt-1">
+                                {{ form_widget(form.genre, {'attr': {'class': 'd-flex gap-3', 'required': 'required'}}) }}
                             </div>
+                            {{ form_errors(form.genre) }}
                         </div>
-                    </div>
 
-                    <div class="form-group">
-                        <div class="form-check form-switch">
-                            {{ form_widget(form.mort, {'attr': {'class': 'form-check-input'}}) }}
-                            {{ form_label(form.mort, "Décédé(e)", {'label_attr': {'class': 'form-check-label'}}) }}
+                        <div class="col-12 mt-3">
+                            <div class="form-check form-switch">
+                                {{ form_widget(form.mort, {'attr': {'class': 'form-check-input'}}) }}
+                                {{ form_label(form.mort, "Cette personne est décédée", {'label_attr': {'class': 'form-check-label'}}) }}
+                            </div>
+                            {{ form_errors(form.mort) }}
                         </div>
-                        {{ form_errors(form.mort) }}
-                    </div>
 
-                    <hr class="my-4">
+                        <hr class="my-4 text-secondary">
 
-                    <h5 class="mb-3"><i class="fas fa-layer-group"></i> Génération</h5>
+                        <div class="col-12">
+                            <label class="form-label fw-bold" for="{{ form.generation.vars.id }}">Génération <span class="text-danger">*</span></label>
+                            {{ form_widget(form.generation, {'attr': {'class': 'form-select select2-enable', 'required': 'required'}}) }}
+                            {{ form_errors(form.generation) }}
+                            <small class="text-muted">Sélectionnez une génération. <a href="{{ path('generations_list') }}">Gérer les générations</a></small>
+                        </div>
 
-                    <div class="form-group">
-                        {{ form_label(form.generation, "Génération") }}
-                        {{ form_widget(form.generation, {'attr': {'class': 'form-select'}}) }}
-                        {{ form_errors(form.generation) }}
-                        <small class="text-muted">Sélectionnez une génération. <a href="{{ path('generations_list') }}">Gérer les générations</a></small>
-                    </div>
+                        <div class="col-md-6 js-gen-dependent" data-gen-dependent="1">
+                            {{ form_label(form.pere, "Père", {'label_attr': {'class': 'form-label fw-bold'}}) }}
+                            {{ form_widget(form.pere, {'attr': {'class': 'form-select select2-enable'}}) }}
+                            {{ form_errors(form.pere) }}
+                        </div>
+                        <div class="col-md-6 js-gen-dependent" data-gen-dependent="1">
+                            {{ form_label(form.mere, "Mère", {'label_attr': {'class': 'form-label fw-bold'}}) }}
+                            {{ form_widget(form.mere, {'attr': {'class': 'form-select select2-enable'}}) }}
+                            {{ form_errors(form.mere) }}
+                        </div>
 
-                    <hr class="my-4">
+                        <div class="col-12 js-gen-dependent" data-gen-dependent="1">
+                            {{ form_label(form.partenaires, "Conjoint(s)", {'label_attr': {'class': 'form-label fw-bold'}}) }}
+                            {{ form_widget(form.partenaires, {'attr': {'class': 'form-select select2-enable', 'data-placeholder': 'Choisir un ou plusieurs partenaires...'}}) }}
+                            {{ form_errors(form.partenaires) }}
+                        </div>
 
-                    <div class="form-group">
-                        {{ form_label(form.pere, "Père") }}
-                        {{ form_widget(form.pere, {'attr': {'class': 'form-select'}}) }}
-                        {{ form_errors(form.pere) }}
-                    </div>
-
-                    <div class="form-group">
-                        {{ form_label(form.mere, "Mère") }}
-                        {{ form_widget(form.mere, {'attr': {'class': 'form-select'}}) }}
-                        {{ form_errors(form.mere) }}
-                    </div>
-
-                    <div class="form-group">
-                        {{ form_label(form.partenaires, "Conjoint(s)") }}
-                        {{ form_widget(form.partenaires, {'attr': {'class': 'form-select', 'multiple': 'multiple'}}) }}
-                        {{ form_errors(form.partenaires) }}
-                    </div>
-
-                    <div class="form-group">
-                        {{ form_label(form.enfants, "Enfant(s)") }}
-                        {{ form_widget(form.enfants, {'attr': {'class': 'form-select', 'multiple': 'multiple'}}) }}
-                        {{ form_errors(form.enfants) }}
-                        <small class="text-muted">Sélectionnez les enfants de cette personne.</small>
+                        <div class="col-12 js-gen-dependent" data-gen-dependent="1">
+                            {{ form_label(form.enfants, "Enfant(s)", {'label_attr': {'class': 'form-label fw-bold'}}) }}
+                            {{ form_widget(form.enfants, {'attr': {'class': 'form-select select2-enable', 'data-placeholder': 'Choisir les enfants...'}}) }}
+                            {{ form_errors(form.enfants) }}
+                        </div>
                     </div>
 
                     <div class="mt-5 d-flex gap-2 justify-content-between">
-                        <div>
-                            <a href="{{ path('family_tree') }}" class="btn btn-secondary">
-                                <i class="fas fa-arrow-left"></i> Annuler
-                            </a>
-                        </div>
+                        <a href="{{ path('family_tree') }}" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left"></i> Annuler
+                        </a>
                         {{ form_widget(form.save, {'attr': {'class': 'btn btn-success btn-lg'}}) }}
                     </div>
 
@@ -108,17 +92,93 @@
         </div>
     </div>
 </div>
+{% endblock %}
 
-<style>
-    .form-check-input {
-        width: 3rem;
-        height: 1.5rem;
-        margin-top: 0.25rem;
-    }
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const genSelect = document.getElementById('{{ form.generation.vars.id }}');
+            const dependents = document.querySelectorAll('[data-gen-dependent="1"]');
+            const currentId = {{ form.vars.value.id ? form.vars.value.id : 'null' }};
+            const optionsUrl = '{{ path('personne_options') }}';
+            const selects = {
+                pere: document.getElementById('{{ form.pere.vars.id }}'),
+                mere: document.getElementById('{{ form.mere.vars.id }}'),
+                partenaires: document.getElementById('{{ form.partenaires.vars.id }}'),
+                enfants: document.getElementById('{{ form.enfants.vars.id }}')
+            };
 
-    .form-check-input:checked {
-        background-color: #4F46E5;
-        border-color: #4F46E5;
-    }
-</style>
+            if (!genSelect) return;
+
+            const toggleDependents = function() {
+                const hasGen = !!genSelect.value;
+                dependents.forEach(function(el) {
+                    el.classList.toggle('d-none', !hasGen);
+                    el.querySelectorAll('select, input').forEach(function(field) {
+                        field.disabled = !hasGen;
+                    });
+                });
+            };
+
+            const updateSelect = function(select, items) {
+                if (!select) return;
+                const isMultiple = !!select.multiple;
+                const selected = new Set(Array.from(select.options).filter(o => o.selected).map(o => o.value));
+                const placeholderText = isMultiple ? '' : (select.querySelector('option[value=""]')?.text || '');
+
+                select.innerHTML = '';
+
+                if (!isMultiple) {
+                    select.appendChild(new Option(placeholderText, ''));
+                }
+
+                items.forEach(function(item) {
+                    const id = String(item.id);
+                    const opt = new Option(item.label, id, false, selected.has(id));
+                    select.appendChild(opt);
+                });
+
+                if (window.jQuery && $(select).data('select2')) {
+                    $(select).trigger('change.select2');
+                } else {
+                    select.dispatchEvent(new Event('change'));
+                }
+            };
+
+            const refreshOptions = function() {
+                if (!genSelect.value) {
+                    updateSelect(selects.pere, []);
+                    updateSelect(selects.mere, []);
+                    updateSelect(selects.partenaires, []);
+                    updateSelect(selects.enfants, []);
+                    return;
+                }
+
+                const params = new URLSearchParams({
+                    generation_id: genSelect.value
+                });
+                if (currentId) {
+                    params.set('current_id', String(currentId));
+                }
+
+                fetch(optionsUrl + '?' + params.toString(), { headers: { 'Accept': 'application/json' } })
+                    .then(r => r.json())
+                    .then(data => {
+                        updateSelect(selects.pere, data.pere || []);
+                        updateSelect(selects.mere, data.mere || []);
+                        updateSelect(selects.partenaires, data.partenaires || []);
+                        updateSelect(selects.enfants, data.enfants || []);
+                    });
+            };
+
+            genSelect.addEventListener('change', function() {
+                toggleDependents();
+                refreshOptions();
+            });
+
+            toggleDependents();
+            refreshOptions();
+        });
+    </script>
 {% endblock %}

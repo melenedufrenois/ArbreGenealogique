@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="fr">
     <head>
+
 		<meta charset="UTF-8">
 		<title>Arbre Généalogique - {% block title %}{% endblock %}</title>
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -12,7 +13,9 @@
 			<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 			<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,400,500,600,700&display=swap"/>
 			<link href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.css" rel="stylesheet" />
-			<style>
+			<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+			<link href="https://cdnjs.cloudflare.com/ajax/libs/select2-bootstrap-5-theme/1.3.0/select2-bootstrap-5-theme.min.css" rel="stylesheet" />
+			<style>	
 				:root {
 					--primary-color: #4F46E5;
 					--secondary-color: #10B981;
@@ -115,14 +118,25 @@
 				.btn {
 					border-radius: 8px;
 					font-weight: 600;
-					padding: 0.75rem 1.5rem;
+					padding: 0.5rem 0.9rem;
 					transition: all 0.3s ease;
 					border: none;
+					font-size: 0.9rem;
 				}
-
 				.btn-primary {
 					background: var(--primary-color);
 					color: white;
+				}
+				
+				.btn-success:hover {
+					background: #059669;
+					transform: translateY(-2px);
+					box-shadow: 0 10px 15px -3px rgba(16, 185, 129, 0.3);
+				}
+
+				.btn-lg {
+					padding: 0.6rem 1rem;
+					font-size: 0.95rem;
 				}
 
 				.btn-primary:hover {
@@ -147,12 +161,6 @@
 					color: white;
 				}
 
-				.btn-success:hover {
-					background: #059669;
-					transform: translateY(-2px);
-					box-shadow: 0 10px 15px -3px rgba(16, 185, 129, 0.3);
-				}
-
 				.btn-danger {
 					background: var(--danger-color);
 					color: white;
@@ -163,16 +171,6 @@
 					transform: translateY(-2px);
 				}
 
-				.btn-link {
-					color: var(--primary-color);
-					text-decoration: none;
-					font-weight: 600;
-				}
-
-				.btn-link:hover {
-					color: #4338CA;
-					text-decoration: underline;
-				}
 
 				/* Forms */
 				.form-label {
@@ -236,31 +234,6 @@
 					margin-bottom: 1.5rem;
 				}
 
-				/* Alert */
-				.alert {
-					border: none;
-					border-radius: 8px;
-					border-left: 4px solid;
-				}
-
-				.alert-danger {
-					border-left-color: var(--danger-color);
-					background: #FEF2F2;
-					color: #991B1B;
-				}
-
-				.alert-success {
-					border-left-color: var(--secondary-color);
-					background: #F0FDF4;
-					color: #166534;
-				}
-
-				.alert-info {
-					border-left-color: var(--primary-color);
-					background: #EEF2FF;
-					color: #312E81;
-				}
-
 				/* Badges */
 				.badge {
 					border-radius: 6px;
@@ -270,13 +243,8 @@
 				}
 
 				.badge-primary {
-					background: #EEF2FF;
-					color: var(--primary-color);
-				}
-
-				.badge-success {
-					background: #F0FDF4;
-					color: var(--secondary-color);
+					background: #E0F2FE;
+					color: #0369A1;
 				}
 
 				.badge-danger {
@@ -338,12 +306,58 @@
 						font-size: 0.875rem;
 					}
 				}
+
+				/* Select2 Customization */
+				.select2-selection--multiple {
+					display: flex;
+					flex-wrap: wrap;
+					gap: 0.5rem;
+				}
+
+				.select2-selection__choice {
+					background-color: #4F46E5 !important;
+					color: white !important;
+					border: none !important;
+					padding: 0.25rem 0.5rem !important;
+					border-radius: 4px !important;
+				}
+
+				.select2-selection__choice__remove {
+					color: white !important;
+					margin-right: 0.25rem !important;
+				}
 			</style>
 		{% endblock %}
 
 		{% block javascripts %}
             <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q" crossorigin="anonymous"></script>
             <script src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    // Initialiser select2 pour tous les select avec la classe 'form-select'
+                    $('.form-select').each(function() {
+                        var isMultiple = $(this).attr('multiple');
+                        var config = {
+                            theme: 'bootstrap-5',
+                            allowClear: true,
+                            placeholder: 'Sélectionner une option'
+                        };
+                        
+                        // Configuration spécifique pour les sélections multiples
+                        if (isMultiple) {
+                            config.closeOnSelect = false;
+                            config.templateSelection = function(data, container) {
+                                if (data.id === '') return data.text;
+                                $(container).addClass('select2-selection__choice');
+                                return data.text;
+                            };
+                        }
+                        
+                        $(this).select2(config);
+                    });
+                });
+            </script>
 		{% endblock %}
 	</head>
     <body class="layout-root">

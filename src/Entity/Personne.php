@@ -247,6 +247,9 @@ class Personne
     {
         if (!$this->partenaires->contains($partenaire)) {
             $this->partenaires[] = $partenaire;
+            if (!$partenaire->partenaires->contains($this)) {
+                $partenaire->partenaires[] = $this;
+            }
         }
 
         return $this;
@@ -254,7 +257,11 @@ class Personne
 
     public function removePartenaire(self $partenaire): self
     {
-        $this->partenaires->removeElement($partenaire);
+        if ($this->partenaires->removeElement($partenaire)) {
+            if ($partenaire->partenaires->contains($this)) {
+                $partenaire->partenaires->removeElement($this);
+            }
+        }
 
         return $this;
     }
